@@ -23,5 +23,17 @@
     <ClInclude Include="constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="machine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="machinery_db.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="user_input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="view.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
