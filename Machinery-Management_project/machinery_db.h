@@ -17,5 +17,5 @@ MachineDBNode* deleteRowByKey(MachineDBNode* head, const char*);
 MachineDBNode* findRowByKey(MachineDBNode* head, const char*);
 MachineDBNode* getLast(MachineDBNode* head);
 
-MachineDBNode* initializeFromFile(char*);
+MachineDBNode* initializeFromFile(const char* filePath);
 void saveToFile(MachineDBNode* head, const char* path);

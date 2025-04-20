@@ -1,0 +1,2 @@
+1 Toyota Sup 1970 40000.00 30000.00 100000 110000 Miles m.core@gmail.com 8831288 3 1
+12 Nissan Skyline 1950 10000.00 10000.00 1111 11111 Den artur@gmail.com 31231231 4 1

@@ -1,5 +1,9 @@
-#include "constants.h"
+#include <stdio.h>
 
-void main() {
+#include "view.h"
 
+void main()
+{
+	MachineDBNode* db = initializeFromFile(DB_PATH);
+	runViewApp(db);
 }

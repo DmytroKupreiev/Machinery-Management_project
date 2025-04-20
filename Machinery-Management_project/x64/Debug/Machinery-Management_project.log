@@ -1,1 +1,6 @@
-﻿  Machinery-Management_project.vcxproj -> D:\Work\C_Projects\Machinery-Management_project\x64\Debug\Machinery-Management_project.exe
+﻿  machinery_db.c
+  main.c
+  user_input.c
+  view.c
+  Generating Code...
+  Machinery-Management_project.vcxproj -> D:\Work\C_Projects\Machinery-Management_project\x64\Debug\Machinery-Management_project.exe
