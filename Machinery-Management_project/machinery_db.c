@@ -5,7 +5,8 @@
 
 #include "machinery_db.h"
 
-MachineDBNode* createRow() {
+MachineDBNode* createRow()
+{
 	MachineDBNode* newNode = (MachineDBNode*)malloc(sizeof(MachineDBNode));
 
 	if (newNode == NULL) {
@@ -18,7 +19,8 @@ MachineDBNode* createRow() {
 	return newNode;
 }
 
-MachineDBNode* getLast(MachineDBNode* head) {
+MachineDBNode* getLast(MachineDBNode* head) 
+{
 	if (head == NULL) { return head; }
 
 	MachineDBNode* current = head;
@@ -29,8 +31,8 @@ MachineDBNode* getLast(MachineDBNode* head) {
 	return current;
 }
 
-MachineDBNode* addRow(MachineDBNode* head, MachineDBNode* newNode) {
-
+MachineDBNode* addRow(MachineDBNode* head, MachineDBNode* newNode)
+{
 	if (head == NULL) {
 		newNode->next = NULL;
 		head = newNode;
@@ -49,7 +51,8 @@ MachineDBNode* addRow(MachineDBNode* head, MachineDBNode* newNode) {
 	return head;
 }
 
-MachineDBNode* addRowByKey(MachineDBNode* head, MachineDBNode* newNode) {
+MachineDBNode* addRowByKey(MachineDBNode* head, MachineDBNode* newNode)
+{
 	if (head == NULL || strcmp(newNode->data.chassisNumber, head->data.chassisNumber) < 0) {
 		newNode->next = head;
 		return newNode;
@@ -58,7 +61,8 @@ MachineDBNode* addRowByKey(MachineDBNode* head, MachineDBNode* newNode) {
 	MachineDBNode* current = head;
 
 	while (current->next != NULL &&
-		strcmp(newNode->data.chassisNumber, current->next->data.chassisNumber) > 0) {
+		   strcmp(newNode->data.chassisNumber, current->next->data.chassisNumber) > 0) 
+	{
 		current = current->next;
 	}
 
@@ -68,8 +72,27 @@ MachineDBNode* addRowByKey(MachineDBNode* head, MachineDBNode* newNode) {
 	return head;
 }
 
-MachineDBNode* deleteRowByKey(MachineDBNode* head, const char* key) {
+MachineDBNode* addRowByValuation(MachineDBNode* head, MachineDBNode* newNode) {
+	if (head == NULL || newNode->data.currentValuation <= head->data.currentValuation) {
+		newNode->next = head;
+		return newNode;
+	}
 
+	MachineDBNode* current = head;
+
+	while (current->next != NULL &&
+		newNode->data.currentValuation > current->next->data.currentValuation) {
+		current = current->next;
+	}
+
+	newNode->next = current->next;
+	current->next = newNode;
+
+	return head;
+}
+
+MachineDBNode* deleteRowByKey(MachineDBNode* head, const char* key)
+{
 	if (head == NULL) {
 		return head;
 	}
@@ -112,8 +135,8 @@ MachineDBNode* findRowByKey(MachineDBNode* head, const char* key) {
 	return NULL;
 }
 
-MachineDBNode* initializeFromFile(const char* filePath) {
-
+MachineDBNode* initializeFromFile(const char* filePath)
+{
 	FILE* db_file = fopen(filePath, "r");
 
 	if (db_file == NULL) {
@@ -145,7 +168,8 @@ MachineDBNode* initializeFromFile(const char* filePath) {
 	return head;
 }
 
-void saveToFile(MachineDBNode* head, const char* filePath) {
+void saveToFile(MachineDBNode* head, const char* filePath)
+{
 	FILE* db_file = fopen(filePath, "w");
 
 	if (db_file == NULL) {
@@ -175,4 +199,47 @@ void saveToFile(MachineDBNode* head, const char* filePath) {
 	}
 
 	fclose(db_file);
+}
+
+int getLenght(MachineDBNode* head)
+{
+	MachineDBNode* current = head;
+	int counter = 0;
+
+	while (current != NULL) {
+		counter++;
+		current = current->next;
+	}
+
+	return counter;
+}
+
+MachineDBNode* sortByValuation(MachineDBNode* head) {
+	MachineDBNode* sorted = NULL;
+	MachineDBNode* current = head;
+
+	while (current != NULL) {
+		MachineDBNode* next = current->next;
+		sorted = addRowByValuation(sorted, current);
+		current = next;
+	}
+
+	return sorted;
+}
+
+void calculateBreakdownStats(MachineDBNode* head, int stats[5]) {
+	// stats[0] - *not use*
+	// stats[1] - NEVER
+	// stats[2] - LESS_THAN_THREE
+	// stats[3] - LESS_THAN_FIVE
+	// stats[4] - MORE_THAN_FIVE
+
+	MachineDBNode* current = head;
+	while (current != NULL) {
+		BreakdownFreq freq = current->data.breakdowns;
+		if (freq >= NEVER && freq <= MORE_THAN_FIVE) {
+			stats[freq]++;
+		}
+		current = current->next;
+	}
 }

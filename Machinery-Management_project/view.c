@@ -10,23 +10,30 @@ void displayTableHeader(const char* label);
 void printDBNode(MachineDBNode* row);
 
 
-void runViewApp(MachineDBNode* dataBase) {
-    int choice = 0;
+void runViewApp(MachineDBNode* dataBase)
+{
+    int choice = -1;
 
     do {
         displayMenu();
         printf("Enter your choice (1-9): ");
-        int countValure = scanf("%d", &choice);
+        int countValue = scanf("%d", &choice);
+
+        if (countValue != 1) {
+            printf("Invalid input.\n");
+            clearInput();
+            continue;
+        }
 
         switch (choice) {
-        case 1: displayAllMachines(dataBase); break;
+        case 1: displayAllMachines(dataBase, "ALL MACHINES"); break;
         case 2: displayMachineByKey(dataBase); break;
         case 3: addMachine(&dataBase); break;
         case 4: deleteMachine(&dataBase); break;
         case 5: updateMachine(&dataBase); break;
-        case 6: break;
+        case 6: displayBreakdownStatistics(dataBase); break;
         case 7: break;
-        case 8: break;
+        case 8: displaySortDB(dataBase); break;
         case 9: system("cls"); break;
         case 0: printf("Saving data and exiting...\n"); break;
         default:printf("Invalid choice. Please try again.\n");
@@ -36,7 +43,8 @@ void runViewApp(MachineDBNode* dataBase) {
     saveToFile(dataBase, DB_PATH);
 }
 
-void displayAllMachines(MachineDBNode* head) {
+void displayAllMachines(MachineDBNode* head, const char* header)
+{
     if (head == NULL) {
         printf("\nNo machines in the fleet.\n");
         return;
@@ -44,14 +52,15 @@ void displayAllMachines(MachineDBNode* head) {
 
     MachineDBNode* current = head;
 
-    displayTableHeader("ALL MACHINES");
+    displayTableHeader(header);
     while (current != NULL) {
         printDBNode(current);
         current = current->next;
     }
 }
 
-void displayMachineByKey(MachineDBNode* head) {
+void displayMachineByKey(MachineDBNode* head)
+{
     if (head == NULL) {
         printf("\nNo machines in the fleet.\n");
         return;
@@ -72,12 +81,14 @@ void displayMachineByKey(MachineDBNode* head) {
     printDBNode(foundNode);
 }
 
-void addMachine(MachineDBNode** head) {
+void addMachine(MachineDBNode** head)
+{
     MachineDBNode* newNode = constructMachine(head, NULL);
     *head = addRowByKey(*head, newNode);
 }
 
-void updateMachine(MachineDBNode** head) {
+void updateMachine(MachineDBNode** head)
+{
     char chassisNumber[MAX_STRING];
 
     clearInput();
@@ -97,11 +108,85 @@ void updateMachine(MachineDBNode** head) {
         }
 
         constructMachine(head, findNode);
-    } while (1);
+    } while (true);
 
 }
 
-MachineDBNode* constructMachine(MachineDBNode** head, MachineDBNode* node) {
+void deleteMachine(MachineDBNode** head)
+{
+    if (*head == NULL) {
+        printf("\nDatabase is empty!\n");
+        return;
+    }
+
+    char chassisNumber[MAX_STRING];
+    int currentLength = getLenght(*head);
+
+    clearInput();
+    do
+    {
+        printf("\n=== Delete row ===\n");
+        printf("Enter Chassis Number(\"-\" for exit): ");
+        fgets(chassisNumber, MAX_STRING, stdin);
+        chassisNumber[strcspn(chassisNumber, "\n")] = '\0';
+
+        if (strcmp(chassisNumber, "-") == 0) { return; }
+
+        *head = deleteRowByKey(*head, chassisNumber);
+        int newLength = getLenght(*head);
+
+        if (currentLength == newLength) {
+            printf("\n(-) Row not found\n");
+        }
+        else {
+            printf("\n(+) Successfully deleted\n");
+            currentLength = newLength;
+        }
+    } while (true);
+
+}
+
+void displaySortDB(MachineDBNode* head)
+{
+    MachineDBNode* sorted = sortByValuation(head);
+    displayAllMachines(sorted, "SORTED DATABASE");
+}
+
+void displayBreakdownStatistics(MachineDBNode* head)
+{
+    int total = getLenght(head);
+
+    if (total == 0) {
+        printf("No machines in database.\n");
+        return;
+    }
+
+    int numberOfCases[5] = { 0, 0, 0, 0, 0 };
+    calculateBreakdownStats(head, numberOfCases);
+
+    float neverPercent =    (float)numberOfCases[NEVER]           / total * 100;
+    float rarePercent =     (float)numberOfCases[LESS_THAN_THREE] / total * 100;
+    float moderatePercent = (float)numberOfCases[LESS_THAN_FIVE]  / total * 100;
+    float frequentPercent = (float)numberOfCases[MORE_THAN_FIVE]  / total * 100;
+
+    printf("\n");
+    printf("+-----------------------------+-------------+\n");
+    printf("| Breakdown Statistics        | Percentage  |\n");
+    printf("+-----------------------------+-------------+\n");
+    printf("| NEVER                       | %9.2f%%  |\n", neverPercent);
+    printf("+-----------------------------+-------------+\n");
+    printf("| LESS THAN THREE             | %9.2f%%  |\n", rarePercent);
+    printf("+-----------------------------+-------------+\n");
+    printf("| LESS THAN FIVE              | %9.2f%%  |\n", moderatePercent);
+    printf("+-----------------------------+-------------+\n");
+    printf("| MORE THAN FIVE              | %9.2f%%  |\n", frequentPercent);
+    printf("+-----------------------------+-------------+\n");
+    printf("| Total machines              | %9d   |\n", total);
+    printf("+-----------------------------+-------------+\n\n");
+}
+
+MachineDBNode* constructMachine(MachineDBNode** head, MachineDBNode* node)
+{
     MachineDBNode* nodeToEdit;
     Machine* machine;
 
@@ -187,11 +272,8 @@ MachineDBNode* constructMachine(MachineDBNode** head, MachineDBNode* node) {
     return nodeToEdit;
 }
 
-void deleteMachine(MachineDBNode** head) {
-
-}
-
-void printDBNode(MachineDBNode* row) {
+void printDBNode(MachineDBNode* row)
+{
     printf("%-15s %-15s %-15s %-6d %-10.2f %-10.2f %-8d %-13d %-10s %-20s %-25s %-15s %-12s\n",
         row->data.chassisNumber,
         row->data.make,
@@ -208,7 +290,8 @@ void printDBNode(MachineDBNode* row) {
         getBreakdownFreqString(row->data.breakdowns));
 }
 
-void displayMenu() {
+void displayMenu()
+{
     printf("\n===== Machinery Management Ltd: Fleet Management System =====\n");
     printf("1) Display all machines to screen\n");
     printf("2) Display machine details\n");
@@ -223,7 +306,8 @@ void displayMenu() {
     printf("=============================================================\n");
 }
 
-void displayTableHeader(const char* label) {
+void displayTableHeader(const char* label)
+{
     printf("\n===============================================================  %-15s =======================================================================================================\n", label);
     printf("%-15s %-15s %-15s %-6s %-10s %-10s %-8s %-13s %-10s %-20s %-25s %-15s %-12s\n",
         "Chassis No.", "Make", "Model", "Year", "Cost", "Valuation", "Mileage",

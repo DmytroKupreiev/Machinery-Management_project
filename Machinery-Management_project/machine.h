@@ -3,18 +3,18 @@
 #include "constants.h"
 
 typedef enum MachineType {
-    TRACTOR = 1,
-    EXCAVATOR,
-    ROLLER,
-    CRANE,
-    MIXER
+    TRACTOR    = 1,
+    EXCAVATOR  = 2,
+    ROLLER     = 3,
+    CRANE      = 4,
+    MIXER      = 5
 } MachineType;
 
 typedef enum BreakdownFreq {
-    NEVER = 1,
-    LESS_THAN_THREE,
-    LESS_THAN_FIVE,
-    MORE_THAN_FIVE
+    NEVER           = 1,
+    LESS_THAN_THREE = 2,
+    LESS_THAN_FIVE  = 3,
+    MORE_THAN_FIVE  = 4
 } BreakdownFreq;
 
 typedef struct Machine {
