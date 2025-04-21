@@ -20,7 +20,7 @@ MachineDBNode* sortByValuation(MachineDBNode* head);
 
 void calculateBreakdownStats(MachineDBNode* head, int stats[5]);
 MachineDBNode* getLast(MachineDBNode* head);
-int getLenght(MachineDBNode* head);
+int getLength(MachineDBNode* head);
 
 MachineDBNode* initializeFromFile(const char* filePath);
 void saveToFile(MachineDBNode* head, const char* path);

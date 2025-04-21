@@ -201,7 +201,7 @@ void saveToFile(MachineDBNode* head, const char* filePath)
 	fclose(db_file);
 }
 
-int getLenght(MachineDBNode* head)
+int getLength(MachineDBNode* head)
 {
 	MachineDBNode* current = head;
 	int counter = 0;

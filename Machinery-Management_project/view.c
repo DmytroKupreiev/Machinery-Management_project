@@ -120,7 +120,7 @@ void deleteMachine(MachineDBNode** head)
     }
 
     char chassisNumber[MAX_STRING];
-    int currentLength = getLenght(*head);
+    int currentLength = getLength(*head);
 
     clearInput();
     do
@@ -133,7 +133,7 @@ void deleteMachine(MachineDBNode** head)
         if (strcmp(chassisNumber, "-") == 0) { return; }
 
         *head = deleteRowByKey(*head, chassisNumber);
-        int newLength = getLenght(*head);
+        int newLength = getLength(*head);
 
         if (currentLength == newLength) {
             printf("\n(-) Row not found\n");
@@ -154,7 +154,7 @@ void displaySortDB(MachineDBNode* head)
 
 void displayBreakdownStatistics(MachineDBNode* head)
 {
-    int total = getLenght(head);
+    int total = getLength(head);
 
     if (total == 0) {
         printf("No machines in database.\n");
