@@ -6,12 +6,15 @@
 #include "user_input.h"
 
 void displayMenu();
-void displayTableHeader(const char* label);
-void printDBNode(MachineDBNode* row);
 
 
-void runViewApp(MachineDBNode* dataBase)
+void runViewApp(MachineDBNode* dataBase, User* users)
 {
+    if (!login_system(users)) {
+        printf("Access denied. Exiting...\n");
+        return;
+    }
+
     int choice = -1;
 
     do {
@@ -32,7 +35,7 @@ void runViewApp(MachineDBNode* dataBase)
         case 4: deleteMachine(&dataBase); break;
         case 5: updateMachine(&dataBase); break;
         case 6: displayBreakdownStatistics(dataBase); break;
-        case 7: break;
+        case 7: generateReportFile(dataBase, "report.txt"); break;
         case 8: displaySortDB(dataBase); break;
         case 9: system("cls"); break;
         case 0: printf("Saving data and exiting...\n"); break;
@@ -54,7 +57,7 @@ void displayAllMachines(MachineDBNode* head, const char* header)
 
     displayTableHeader(header);
     while (current != NULL) {
-        printDBNode(current);
+        displayDBNode(current);
         current = current->next;
     }
 }
@@ -78,7 +81,7 @@ void displayMachineByKey(MachineDBNode* head)
     }
 
     displayTableHeader("Found row");
-    printDBNode(foundNode);
+    displayDBNode(foundNode);
 }
 
 void addMachine(MachineDBNode** head)
@@ -150,39 +153,6 @@ void displaySortDB(MachineDBNode* head)
 {
     MachineDBNode* sorted = sortByValuation(head);
     displayAllMachines(sorted, "SORTED DATABASE");
-}
-
-void displayBreakdownStatistics(MachineDBNode* head)
-{
-    int total = getLength(head);
-
-    if (total == 0) {
-        printf("No machines in database.\n");
-        return;
-    }
-
-    int numberOfCases[5] = { 0, 0, 0, 0, 0 };
-    calculateBreakdownStats(head, numberOfCases);
-
-    float neverPercent =    (float)numberOfCases[NEVER]           / total * 100;
-    float rarePercent =     (float)numberOfCases[LESS_THAN_THREE] / total * 100;
-    float moderatePercent = (float)numberOfCases[LESS_THAN_FIVE]  / total * 100;
-    float frequentPercent = (float)numberOfCases[MORE_THAN_FIVE]  / total * 100;
-
-    printf("\n");
-    printf("+-----------------------------+-------------+\n");
-    printf("| Breakdown Statistics        | Percentage  |\n");
-    printf("+-----------------------------+-------------+\n");
-    printf("| NEVER                       | %9.2f%%  |\n", neverPercent);
-    printf("+-----------------------------+-------------+\n");
-    printf("| LESS THAN THREE             | %9.2f%%  |\n", rarePercent);
-    printf("+-----------------------------+-------------+\n");
-    printf("| LESS THAN FIVE              | %9.2f%%  |\n", moderatePercent);
-    printf("+-----------------------------+-------------+\n");
-    printf("| MORE THAN FIVE              | %9.2f%%  |\n", frequentPercent);
-    printf("+-----------------------------+-------------+\n");
-    printf("| Total machines              | %9d   |\n", total);
-    printf("+-----------------------------+-------------+\n\n");
 }
 
 MachineDBNode* constructMachine(MachineDBNode** head, MachineDBNode* node)
@@ -272,24 +242,6 @@ MachineDBNode* constructMachine(MachineDBNode** head, MachineDBNode* node)
     return nodeToEdit;
 }
 
-void printDBNode(MachineDBNode* row)
-{
-    printf("%-15s %-15s %-15s %-6d %-10.2f %-10.2f %-8d %-13d %-10s %-20s %-25s %-15s %-12s\n",
-        row->data.chassisNumber,
-        row->data.make,
-        row->data.model,
-        row->data.yearOfManufacture,
-        row->data.cost,
-        row->data.currentValuation,
-        row->data.currentMileage,
-        row->data.nextServiceMileage,
-        getMachineTypeString(row->data.machineType),
-        row->data.ownerName,
-        row->data.ownerEmail,
-        row->data.ownerPhone,
-        getBreakdownFreqString(row->data.breakdowns));
-}
-
 void displayMenu()
 {
     printf("\n===== Machinery Management Ltd: Fleet Management System =====\n");
@@ -308,9 +260,85 @@ void displayMenu()
 
 void displayTableHeader(const char* label)
 {
-    printf("\n===============================================================  %-15s =======================================================================================================\n", label);
-    printf("%-15s %-15s %-15s %-6s %-10s %-10s %-8s %-13s %-10s %-20s %-25s %-15s %-12s\n",
+    printTableHeader(stdout, label);
+}
+
+void displayDBNode(MachineDBNode* row) {
+    printDBNode(stdout, row);
+}
+
+void displayBreakdownStatistics(MachineDBNode* head) {
+    printBreakdownStatistics(stdout, head);
+}
+
+void printTableHeader(FILE* output, const char* label) {
+    fprintf(output, "\n===============================================================  %-15s =======================================================================================================\n", label);
+    fprintf(output, "%-15s %-15s %-15s %-6s %-10s %-10s %-8s %-13s %-10s %-20s %-25s %-15s %-12s\n",
         "Chassis No.", "Make", "Model", "Year", "Cost", "Valuation", "Mileage",
         "Next Service", "Type", "Owner Name", "Owner Email", "Owner Phone", "Breakdowns");
-    printf("========================================================================================================================================================================================\n");
+    fprintf(output, "========================================================================================================================================================================================\n");
+}
+
+void printDBNode(FILE* output, MachineDBNode* row) {
+    fprintf(output, "%-15s %-15s %-15s %-6d %-10.2f %-10.2f %-8d %-13d %-10s %-20s %-25s %-15s %-12s\n",
+        row->data.chassisNumber,
+        row->data.make,
+        row->data.model,
+        row->data.yearOfManufacture,
+        row->data.cost,
+        row->data.currentValuation,
+        row->data.currentMileage,
+        row->data.nextServiceMileage,
+        getMachineTypeString(row->data.machineType),
+        row->data.ownerName,
+        row->data.ownerEmail,
+        row->data.ownerPhone,
+        getBreakdownFreqString(row->data.breakdowns));
+}
+
+void printBreakdownStatistics(FILE* output, MachineDBNode* head) {
+    int total = getLength(head);
+
+    if (total == 0) {
+        fprintf(output, "No machines in database.\n");
+        return;
+    }
+
+    float statistic[5] = { 0, 0, 0, 0, 0 };
+    calculateBreakdownStats(head, statistic, total);
+
+    fprintf(output, "\n");
+    fprintf(output, "+-----------------------------+-------------+\n");
+    fprintf(output, "| Breakdown Statistics        | Percentage  |\n");
+    fprintf(output, "+-----------------------------+-------------+\n");
+    fprintf(output, "| NEVER                       | %9.2f%%  |\n", statistic[NEVER]);
+    fprintf(output, "+-----------------------------+-------------+\n");
+    fprintf(output, "| LESS THAN THREE             | %9.2f%%  |\n", statistic[LESS_THAN_THREE]);
+    fprintf(output, "+-----------------------------+-------------+\n");
+    fprintf(output, "| LESS THAN FIVE              | %9.2f%%  |\n", statistic[LESS_THAN_FIVE]);
+    fprintf(output, "+-----------------------------+-------------+\n");
+    fprintf(output, "| MORE THAN FIVE              | %9.2f%%  |\n", statistic[MORE_THAN_FIVE]);
+    fprintf(output, "+-----------------------------+-------------+\n");
+    fprintf(output, "| Total machines              | %9d   |\n", total);
+    fprintf(output, "+-----------------------------+-------------+\n\n");
+}
+
+void generateReportFile(MachineDBNode* head, const char* filename) {
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Error opening file %s for writing.\n", filename);
+        return;
+    }
+
+    printBreakdownStatistics(file, head);
+    printTableHeader(file, "ALL MACHINES");
+
+    MachineDBNode* current = head;
+    while (current != NULL) {
+        printDBNode(file, current);
+        current = current->next;
+    }
+
+    fclose(file);
+    printf("Report successfully generated to %s\n", filename);
 }

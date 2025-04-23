@@ -19,6 +19,17 @@ MachineDBNode* createRow()
 	return newNode;
 }
 
+MachineDBNode* copyNode(const MachineDBNode* source) {
+	if (source == NULL) return NULL;
+
+	MachineDBNode* newNode = createRow();
+
+	newNode->data = source->data; 
+	newNode->next = NULL;
+
+	return newNode;
+}
+
 MachineDBNode* getLast(MachineDBNode* head) 
 {
 	if (head == NULL) { return head; }
@@ -220,14 +231,16 @@ MachineDBNode* sortByValuation(MachineDBNode* head) {
 
 	while (current != NULL) {
 		MachineDBNode* next = current->next;
-		sorted = addRowByValuation(sorted, current);
+		MachineDBNode* newNode = copyNode(current);
+
+		sorted = addRowByValuation(sorted, newNode);
 		current = next;
 	}
 
 	return sorted;
 }
 
-void calculateBreakdownStats(MachineDBNode* head, int stats[5]) {
+void calculateBreakdownStats(MachineDBNode* head, float stats[5], int rowCount) {
 	// stats[0] - *not use*
 	// stats[1] - NEVER
 	// stats[2] - LESS_THAN_THREE
@@ -242,4 +255,9 @@ void calculateBreakdownStats(MachineDBNode* head, int stats[5]) {
 		}
 		current = current->next;
 	}
+
+	stats[NEVER]           = (float)stats[NEVER]           / rowCount * 100;
+	stats[LESS_THAN_THREE] = (float)stats[LESS_THAN_THREE] / rowCount * 100;
+	stats[LESS_THAN_FIVE]  = (float)stats[LESS_THAN_FIVE]  / rowCount * 100;
+	stats[MORE_THAN_FIVE]  = (float)stats[MORE_THAN_FIVE]  / rowCount * 100;
 }

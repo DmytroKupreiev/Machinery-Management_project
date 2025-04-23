@@ -11,6 +11,7 @@ typedef struct MachineDBNode {
 } MachineDBNode;
 
 MachineDBNode* createRow();
+MachineDBNode* copyNode(const MachineDBNode* source);
 MachineDBNode* addRow(MachineDBNode* head, MachineDBNode* newNode);
 MachineDBNode* addRowByKey(MachineDBNode* head, MachineDBNode* newNode);
 MachineDBNode* addRowByValuation(MachineDBNode* head, MachineDBNode* newNode);
@@ -18,7 +19,7 @@ MachineDBNode* deleteRowByKey(MachineDBNode* head, const char* key);
 MachineDBNode* findRowByKey(MachineDBNode* head, const char* key);
 MachineDBNode* sortByValuation(MachineDBNode* head);
 
-void calculateBreakdownStats(MachineDBNode* head, int stats[5]);
+void calculateBreakdownStats(MachineDBNode* head, float stats[5], int rowCount);
 MachineDBNode* getLast(MachineDBNode* head);
 int getLength(MachineDBNode* head);
 

@@ -1,0 +1,30 @@
+
++-----------------------------+-------------+
+| Breakdown Statistics        | Percentage  |
++-----------------------------+-------------+
+| NEVER                       |     45.45%  |
++-----------------------------+-------------+
+| LESS THAN THREE             |     27.27%  |
++-----------------------------+-------------+
+| LESS THAN FIVE              |     18.18%  |
++-----------------------------+-------------+
+| MORE THAN FIVE              |      9.09%  |
++-----------------------------+-------------+
+| Total machines              |        11   |
++-----------------------------+-------------+
+
+
+===============================================================  ALL MACHINES    =======================================================================================================
+Chassis No.     Make            Model           Year   Cost       Valuation  Mileage  Next Service  Type       Owner Name           Owner Email               Owner Phone     Breakdowns  
+========================================================================================================================================================================================
+1               Toyota          S56             1970   40000.00   30000.00   100000   110000        Roller     Miles                m.core@gmail.com          8831288         Never       
+2               JohnDeere       3030            2015   15000.00   12000.00   20000    25000         Tractor    Alex                 alex.john@gmail.com       5551234         Never       
+3               CAT             320D            2018   18000.00   16000.00   15000    20000         Excavator  Eva                  eva.cat@gmail.com         5552345         Less than 3 
+4               Volvo           XR              2016   13000.00   10000.00   17000    22000         Roller     Mike                 mike.volvo@gmail.com      5553456         Less than 5 
+5               Liebherr        LTM             2019   25000.00   21000.00   12000    18000         Crane      Anna                 anna.ltm@gmail.com        5554567         Never       
+6               Cifa            MK20            2020   22000.00   20000.00   10000    16000         Mixer      Tom                  tom.cifa@gmail.com        5555678         Less than 3 
+7               Kubota          M5              2014   14000.00   10000.00   30000    35000         Tractor    Lily                 lily.kub@gmail.com        5556789         Less than 5 
+8               Komatsu         PC              2017   16000.00   14000.00   25000    30000         Excavator  Sam                  sam.kom@gmail.com         5557890         More than 5 
+9               HAMM            H13             2013   11000.00   8000.00    28000    33000         Roller     Ron                  ron.hamm@gmail.com        5558901         Never       
+10              Terex           AC              2015   19000.00   15000.00   22000    27000         Crane      Ben                  ben.terex@gmail.com       5559012         Less than 3 
+11              Schwing         SP              2018   20000.00   18000.00   16000    21000         Mixer      Jane                 jane.sch@gmail.com        5560123         Never       
