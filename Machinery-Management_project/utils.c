@@ -1,5 +1,7 @@
 #include "utils.h"
 
+#include <string.h>
+
 const char* getMachineTypeString(MachineType mType) {
     switch (mType) {
         case TRACTOR:   return "Tractor";
@@ -19,4 +21,31 @@ const char* getBreakdownFreqString(BreakdownFreq bType) {
         case MORE_THAN_FIVE:  return "More than 5";
         default:              return "Unknown";
     }
+}
+
+int validateMachine(const Machine* machine) {
+    if (strlen(machine->chassisNumber) == 0) return ERROR_CHASSIS;
+    if (strlen(machine->make) == 0)          return ERROR_MAKE;
+    if (strlen(machine->model) == 0)         return ERROR_MODEL;
+    if (strlen(machine->ownerEmail) == 0)    return ERROR_EMAIL;
+    if (strlen(machine->ownerName) == 0)     return ERROR_OWNER;
+    if (strlen(machine->ownerPhone) == 0)    return ERROR_PHONE;
+    if (machine->currentMileage < 0)         return ERROR_MILEAGE;
+
+    return VALIDATION_OK;
+}
+
+const char* getValidationError(ValidationResult result) {
+    const char* errors[] = {
+        "\n(+) All fields are valid",
+        "\n(-) Error: Chassis Number is required!",
+        "\n(-) Error: Make is required!",
+        "\n(-) Error: Model is required!",
+        "\n(-) Error: Email is required!",
+        "\n(-) Error: Current Mileage must be positive!",
+        "\n(-) Error: Owner is required!",
+        "\n(-) Error: Phone is required!"
+    };
+
+    return errors[result];
 }

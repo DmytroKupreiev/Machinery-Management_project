@@ -52,3 +52,14 @@ typedef struct {
     char username[MAX_STRING];
     char password[CREDENTIALS_LEN];
 } User;
+
+typedef enum ValidationResult {
+    VALIDATION_OK = 0,
+    ERROR_CHASSIS = 1,
+    ERROR_MAKE    = 2,
+    ERROR_MODEL   = 3,
+    ERROR_EMAIL   = 4,
+    ERROR_MILEAGE = 5,
+    ERROR_OWNER   = 6,
+    ERROR_PHONE   = 7
+} ValidationResult;

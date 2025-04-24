@@ -13,6 +13,8 @@ MachineDBNode* sortByValuation(MachineDBNode* head);
 
 MachineDBNode* getLast(MachineDBNode* head);
 int			   getLength(MachineDBNode* head);
+int            getAllWithBreakdowns(MachineDBNode* head);
+void           freeDB(MachineDBNode** head);
 
 MachineDBNode* loadDatabaseFile(const char* filePath);
 void		   saveToFile(MachineDBNode* head, const char* path);

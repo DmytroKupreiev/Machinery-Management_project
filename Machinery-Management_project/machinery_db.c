@@ -9,12 +9,19 @@
 MachineDBNode* createRow()
 {
 	MachineDBNode* newNode = (MachineDBNode*)malloc(sizeof(MachineDBNode));
-
 	if (newNode == NULL) {
 		printf("Memory allocation failed\n");
 		exit(1);
 	}
 
+	Machine* machine = &(newNode->data);
+
+	memset(machine, 0, sizeof(Machine));
+	machine->currentValuation = -1;
+	machine->cost = -1;
+	machine->yearOfManufacture = -1;
+	machine->currentMileage = -1;
+	machine->nextServiceMileage = -1;
 	newNode->next = NULL;
 
 	return newNode;
@@ -180,6 +187,23 @@ MachineDBNode* loadDatabaseFile(const char* filePath)
 	return head;
 }
 
+void freeDB(MachineDBNode** head) {
+	if (head == NULL || *head == NULL) {
+		return;
+	}
+
+	MachineDBNode* current = *head;
+	MachineDBNode* next = NULL;
+
+	while (current != NULL) {
+		next = current->next;
+		free(current);
+		current = next;
+	}
+
+	*head = NULL;
+}
+
 void saveToFile(MachineDBNode* head, const char* filePath)
 {
 	FILE* db_file = fopen(filePath, "w");
@@ -226,6 +250,24 @@ int getLength(MachineDBNode* head)
 	return counter;
 }
 
+int getAllWithBreakdowns(MachineDBNode* head)
+{
+	MachineDBNode* current = head;
+	int counter = 0;
+
+	while (current != NULL) {
+		if (current->data.breakdowns >= NEVER 
+			&& current->data.breakdowns <= MORE_THAN_FIVE)
+		{
+			counter++;
+		}
+
+		current = current->next;
+	}
+
+	return counter;
+}
+
 MachineDBNode* sortByValuation(MachineDBNode* head) {
 	MachineDBNode* sorted = NULL;
 	MachineDBNode* current = head;
@@ -262,3 +304,4 @@ void calculateBreakdownStats(MachineDBNode* head, float stats[5], int rowCount) 
 	stats[LESS_THAN_FIVE]  = (float)stats[LESS_THAN_FIVE]  / rowCount * 100;
 	stats[MORE_THAN_FIVE]  = (float)stats[MORE_THAN_FIVE]  / rowCount * 100;
 }
+

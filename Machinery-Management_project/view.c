@@ -104,6 +104,7 @@ void printDBNode(FILE* output, MachineDBNode* row) {
 }
 
 void printBreakdownStatistics(FILE* output, MachineDBNode* head) {
+    int totalWithBreakdowns = getAllWithBreakdowns(head);
     int total = getLength(head);
 
     if (total == 0) {
@@ -112,7 +113,7 @@ void printBreakdownStatistics(FILE* output, MachineDBNode* head) {
     }
 
     float statistic[5] = { 0, 0, 0, 0, 0 };
-    calculateBreakdownStats(head, statistic, total);
+    calculateBreakdownStats(head, statistic, totalWithBreakdowns);
 
     fprintf(output, "\n");
     fprintf(output, "+-----------------------------+-------------+\n");
@@ -126,7 +127,9 @@ void printBreakdownStatistics(FILE* output, MachineDBNode* head) {
     fprintf(output, "+-----------------------------+-------------+\n");
     fprintf(output, "| MORE THAN FIVE              | %9.2f%%  |\n", statistic[MORE_THAN_FIVE]);
     fprintf(output, "+-----------------------------+-------------+\n");
-    fprintf(output, "| Total machines              | %9d   |\n", total);
+    fprintf(output, "| Machines with breakdowns    | %9d   |\n", totalWithBreakdowns);
+    fprintf(output, "+-----------------------------+-------------+\n");
+    fprintf(output, "| Total                       | %9d   |\n", total);
     fprintf(output, "+-----------------------------+-------------+\n\n");
 }
 

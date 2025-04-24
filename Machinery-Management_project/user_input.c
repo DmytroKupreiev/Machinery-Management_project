@@ -5,7 +5,8 @@
 #include <limits.h>
 
 #include "user_input.h"
-
+#include "utils.h"
+#include "types.h"
 
 int isValidEmail(const char* email) {
     int atCount = 0, dotCount = 0;
@@ -106,24 +107,22 @@ void inputChassisNumber(MachineDBNode* head, char* chassisNumber) {
     } while (strlen(chassisNumber) < 1 || !isChassisNumberUnique(head, chassisNumber));
 }
 
+
 MachineDBNode* inputMachineData(MachineDBNode** head, MachineDBNode* node)
 {
     MachineDBNode* nodeToEdit;
-    Machine* machine;
+    ValidationResult validationRes;
 
     if (node == NULL) {
         nodeToEdit = createRow();
-        machine = &(nodeToEdit->data);
-        memset(machine, 0, sizeof(Machine));
-        machine->currentValuation = -1;
-        machine->cost = -1;
     }
     else {
         nodeToEdit = node;
-        machine = &(nodeToEdit->data);
     }
 
+    Machine* machine = &(nodeToEdit->data);
     int choice;
+
     do {
         printf("\n== Current values ==\n");
         printf("1. Chassis Number: %s\n", machine->chassisNumber);
@@ -139,8 +138,10 @@ MachineDBNode* inputMachineData(MachineDBNode** head, MachineDBNode* node)
         printf("11. Owner Phone: %s\n", machine->ownerPhone);
         printf("12. Machine Type: %d\n", machine->machineType);
         printf("13. Breakdown Frequency: %d\n", machine->breakdowns);
+        printf("-1. Exit without save\n");
         printf("0. Finish and Save\n");
-        printf("Enter field to edit (0 to finish): ");
+       
+        printf("Enter field to edit: ");
 
         int len = scanf("%d", &choice);
         clearInput();
@@ -168,22 +169,16 @@ MachineDBNode* inputMachineData(MachineDBNode** head, MachineDBNode* node)
                 (int*)&machine->breakdowns, 1, 4);
             break;
 
+        case -1: printf("Exit...\n"); return NULL;
+
         case 0:
+            validationRes = validateMachine(machine);
+            printf("%s\n", getValidationError(validationRes));
 
-            //////////////////////////////// make minimum req /////////////////////////////
+            if (validationRes != VALIDATION_OK) {
+                choice = -2;
+            }
 
-            if (strlen(machine->chassisNumber) == 0) {
-                printf("Error: Chassis Number is required!\n");
-                choice = -1;
-            }
-            else if (strlen(machine->make) == 0) {
-                printf("Error: Make is required!\n");
-                choice = -1;
-            }
-            else if (machine->yearOfManufacture == 0) {
-                printf("Error: Year of Manufacture is required!\n");
-                choice = -1;
-            }
             break;
         default:
             printf("Invalid choice!\n");

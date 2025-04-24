@@ -10,7 +10,9 @@
 +-----------------------------+-------------+
 | MORE THAN FIVE              |      9.09%  |
 +-----------------------------+-------------+
-| Total machines              |        11   |
+| Machines with breakdowns    |        11   |
++-----------------------------+-------------+
+| Total                       |        12   |
 +-----------------------------+-------------+
 
 
@@ -18,6 +20,7 @@
 Chassis No.     Make            Model           Year   Cost       Valuation  Mileage  Next Service  Type       Owner Name           Owner Email               Owner Phone     Breakdowns  
 ========================================================================================================================================================================================
 1               Toyota          S56             1970   40000.00   30000.00   100000   110000        Roller     Miles                m.core@gmail.com          8831288         Never       
+123             Nissan          H731            0      -1.00      -1.00      0        0             Unknown    Dima                 dima.k@gmail.com          12341231        Unknown     
 2               JohnDeere       3030            2015   15000.00   12000.00   20000    25000         Tractor    Alex                 alex.john@gmail.com       5551234         Never       
 3               CAT             320D            2018   18000.00   16000.00   15000    20000         Excavator  Eva                  eva.cat@gmail.com         5552345         Less than 3 
 4               Volvo           XR              2016   13000.00   10000.00   17000    22000         Roller     Mike                 mike.volvo@gmail.com      5553456         Less than 5 

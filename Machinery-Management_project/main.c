@@ -8,4 +8,7 @@ void main()
 	MachineDBNode* db = loadDatabaseFile(DB_PATH);
 
 	runApp(db, users);
+
+	freeDB(&db);
+	freeUsers(users);
 }

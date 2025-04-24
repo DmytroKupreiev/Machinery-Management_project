@@ -79,7 +79,10 @@ int runLogin(User* users)
 void addMachine(MachineDBNode** head)
 {
     MachineDBNode* newNode = inputMachineData(head, NULL);
-    *head = addRowByKey(*head, newNode);
+
+    if (newNode != NULL) {
+        *head = addRowByKey(*head, newNode);
+    }
 }
 
 void updateMachine(MachineDBNode** head)
