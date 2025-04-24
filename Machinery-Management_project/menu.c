@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+void writeReportFile(MachineDBNode* head, const char* filename);
+
 void runApp(MachineDBNode* dataBase, User* users)
 {
     int access = runLogin(users);
@@ -37,7 +39,7 @@ void runApp(MachineDBNode* dataBase, User* users)
         case 4: deleteMachine(&dataBase); break;
         case 5: updateMachine(&dataBase); break;
         case 6: displayBreakdownStatistics(dataBase); break;
-        case 7: generateReportFile(dataBase, "report.txt"); break;
+        case 7: generateReportFile(dataBase); break;
         case 8: displaySortDB(dataBase); break;
         case 9: system("cls"); break;
         case 0: printf("Saving data and exiting...\n"); break;
@@ -144,7 +146,18 @@ void deleteMachine(MachineDBNode** head)
 
 }
 
-void generateReportFile(MachineDBNode* head, const char* filename) {
+void generateReportFile(MachineDBNode* head) {
+    char filename[256];
+    inputPath(filename, sizeof(filename), "Enter report file path (default: report.txt): ");
+
+    if (strlen(filename) == 0) {
+        strcpy(filename, "report.txt");
+    }
+
+    writeReportFile(head, filename);
+}
+
+void writeReportFile(MachineDBNode* head, const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         printf("Error opening file %s for writing.\n", filename);

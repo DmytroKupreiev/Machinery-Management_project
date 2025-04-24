@@ -6,4 +6,4 @@ int  runLogin(User* users);
 void addMachine(MachineDBNode** head);
 void deleteMachine(MachineDBNode** head);
 void updateMachine(MachineDBNode** head);
-void generateReportFile(MachineDBNode* head, const char* filename);
+void generateReportFile(MachineDBNode* head);

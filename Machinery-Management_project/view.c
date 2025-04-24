@@ -62,7 +62,8 @@ void displayMenu()
     printf("8) List all the machinery in order of current valuation\n");
     printf("9) Clear terminal\n");
     printf("0) Exit system\n");
-    printf("=============================================================\n");
+    printRepeated(stdout, '=', 61);
+    printf("\n");
 }
 
 void displayTableHeader(const char* label)
@@ -79,11 +80,18 @@ void displayBreakdownStatistics(MachineDBNode* head) {
 }
 
 void printTableHeader(FILE* output, const char* label) {
-    fprintf(output, "\n===============================================================  %-15s =======================================================================================================\n", label);
+    fprintf(output, "\n");
+    printRepeated(output, '=', 63);
+    fprintf(output, "  %-15s ", label);
+    printRepeated(output, '=', 109);
+    fprintf(output, "\n");
+
     fprintf(output, "%-15s %-15s %-15s %-6s %-10s %-10s %-8s %-13s %-10s %-20s %-25s %-15s %-12s\n",
         "Chassis No.", "Make", "Model", "Year", "Cost", "Valuation", "Mileage",
         "Next Service", "Type", "Owner Name", "Owner Email", "Owner Phone", "Breakdowns");
-    fprintf(output, "========================================================================================================================================================================================\n");
+
+    printRepeated(output, '=', 190);
+    fprintf(output, "\n");
 }
 
 void printDBNode(FILE* output, MachineDBNode* row) {
@@ -133,3 +141,8 @@ void printBreakdownStatistics(FILE* output, MachineDBNode* head) {
     fprintf(output, "+-----------------------------+-------------+\n\n");
 }
 
+void printRepeated(FILE* stream, char ch, int count) {
+    for (int i = 0; i < count; i++) {
+        fputc(ch, stream);
+    }
+}

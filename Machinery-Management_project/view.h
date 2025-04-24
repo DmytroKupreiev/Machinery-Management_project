@@ -14,3 +14,4 @@ void displayTableHeader(const char* label);
 void printBreakdownStatistics(FILE* output, MachineDBNode* head);
 void printDBNode(FILE* output, MachineDBNode* row);
 void printTableHeader(FILE* output, const char* label);
+void printRepeated(FILE* stream, char ch, int count);

@@ -9,11 +9,23 @@
 #include "types.h"
 
 int isValidEmail(const char* email) {
+
+    if (email == NULL || strlen(email) == 0) {
+        return 0;
+    }
+
     int atCount = 0, dotCount = 0;
-    for (int i = 0; email[i] != '\0'; i++) {
+    int len = strlen(email);
+
+    if (len < 4 || strcmp(email + len - 4, ".com") != 0) {
+        return 0;
+    }
+
+    for (int i = 0; i < len - 4; i++) {
         if (email[i] == '@') atCount++;
         if (email[i] == '.') dotCount++;
     }
+
     return (atCount == 1 && dotCount >= 1);
 }
 
@@ -47,7 +59,7 @@ void inputStringWithValidation(const char* prompt, char* dest, int minLen, int m
 void inputIntWithValidation(const char* prompt, int* dest, int minVal, int maxVal) {
     do {
         printf("%s (%d-%d): ", prompt, minVal, maxVal);
-        scanf("%d", dest);
+        int count = scanf("%d", dest);
         clearInput();
     } while (*dest < minVal || *dest > maxVal);
 }
@@ -55,7 +67,7 @@ void inputIntWithValidation(const char* prompt, int* dest, int minVal, int maxVa
 void inputFloatWithValidation(const char* prompt, float* dest, float minVal, float maxVal) {
     do {
         printf("%s (%.2f-%.2f): ", prompt, minVal, maxVal);
-        scanf("%f", dest);
+        int count = scanf("%f", dest);
         clearInput();
     } while (*dest < minVal || *dest > maxVal);
 }
@@ -67,7 +79,7 @@ void inputEmailWithValidation(char* email) {
         email[strcspn(email, "\n")] = '\0';
 
         if (!isValidEmail(email)) {
-            printf("Invalid email format! Must contain @ and .\n");
+            printf("Invalid email format! Must contain @, a full stop and a .com \n");
             email[0] = '\0';
         }
     } while (!isValidEmail(email));
@@ -107,7 +119,6 @@ void inputChassisNumber(MachineDBNode* head, char* chassisNumber) {
     } while (strlen(chassisNumber) < 1 || !isChassisNumberUnique(head, chassisNumber));
 }
 
-
 MachineDBNode* inputMachineData(MachineDBNode** head, MachineDBNode* node)
 {
     MachineDBNode* nodeToEdit;
@@ -138,7 +149,7 @@ MachineDBNode* inputMachineData(MachineDBNode** head, MachineDBNode* node)
         printf("11. Owner Phone: %s\n", machine->ownerPhone);
         printf("12. Machine Type: %d\n", machine->machineType);
         printf("13. Breakdown Frequency: %d\n", machine->breakdowns);
-        printf("-1. Exit without save\n");
+        printf("-1. Exit\n");
         printf("0. Finish and Save\n");
        
         printf("Enter field to edit: ");
@@ -186,6 +197,22 @@ MachineDBNode* inputMachineData(MachineDBNode** head, MachineDBNode* node)
     } while (choice != 0);
 
     return nodeToEdit;
+}
+
+void inputPath(char* buffer, int size, const char* prompt) {
+    clearInput();
+
+    if (prompt != NULL) {
+        printf("%s", prompt);
+        fflush(stdout);
+    }
+
+    if (fgets(buffer, size, stdin) != NULL) {
+        buffer[strcspn(buffer, "\n")] = '\0';
+    }
+    else {
+        buffer[0] = '\0';
+    }
 }
 
 void clearInput(void) {
