@@ -2,8 +2,10 @@
 #include <stddef.h>
 #include <ctype.h>
 #include <string.h>
+#include <limits.h>
 
 #include "user_input.h"
+
 
 int isValidEmail(const char* email) {
     int atCount = 0, dotCount = 0;
@@ -104,7 +106,95 @@ void inputChassisNumber(MachineDBNode* head, char* chassisNumber) {
     } while (strlen(chassisNumber) < 1 || !isChassisNumberUnique(head, chassisNumber));
 }
 
+MachineDBNode* inputMachineData(MachineDBNode** head, MachineDBNode* node)
+{
+    MachineDBNode* nodeToEdit;
+    Machine* machine;
+
+    if (node == NULL) {
+        nodeToEdit = createRow();
+        machine = &(nodeToEdit->data);
+        memset(machine, 0, sizeof(Machine));
+        machine->currentValuation = -1;
+        machine->cost = -1;
+    }
+    else {
+        nodeToEdit = node;
+        machine = &(nodeToEdit->data);
+    }
+
+    int choice;
+    do {
+        printf("\n== Current values ==\n");
+        printf("1. Chassis Number: %s\n", machine->chassisNumber);
+        printf("2. Make: %s\n", machine->make);
+        printf("3. Model: %s\n", machine->model);
+        printf("4. Year of Manufacture: %d\n", machine->yearOfManufacture);
+        printf("5. Cost: %.2f\n", machine->cost);
+        printf("6. Current Valuation: %.2f\n", machine->currentValuation);
+        printf("7. Current Mileage: %d\n", machine->currentMileage);
+        printf("8. Next Service Mileage: %d\n", machine->nextServiceMileage);
+        printf("9. Owner Name: %s\n", machine->ownerName);
+        printf("10. Owner Email: %s\n", machine->ownerEmail);
+        printf("11. Owner Phone: %s\n", machine->ownerPhone);
+        printf("12. Machine Type: %d\n", machine->machineType);
+        printf("13. Breakdown Frequency: %d\n", machine->breakdowns);
+        printf("0. Finish and Save\n");
+        printf("Enter field to edit (0 to finish): ");
+
+        int len = scanf("%d", &choice);
+        clearInput();
+
+        switch (choice) {
+        case 1:  inputChassisNumber(*head, machine->chassisNumber); break;
+        case 2:  inputStringWithValidation("Enter Make", machine->make, 3, 50); break;
+        case 3:  inputStringWithValidation("Enter Model", machine->model, 2, 50); break;
+        case 4:  inputIntWithValidation("Enter Year of Manufacture", &machine->yearOfManufacture, 1950, 2025); break;
+        case 5:  inputFloatWithValidation("Enter Cost", &machine->cost, 0, 1000000); break;
+        case 6:  inputFloatWithValidation("Enter Current Valuation", &machine->currentValuation, 0, machine->cost); break;
+        case 7:  inputIntWithValidation("Enter Current Mileage", &machine->currentMileage, 0, 1000000); break;
+        case 8:  inputIntWithValidation("Enter Next Service Mileage", &machine->nextServiceMileage, machine->currentMileage, INT_MAX); break;
+        case 9:  inputStringWithValidation("Enter Owner Name", machine->ownerName, 2, 100); break;
+        case 10: inputEmailWithValidation(machine->ownerEmail); break;
+        case 11: inputPhoneWithValidation(machine->ownerPhone); break;
+        case 12:
+            inputIntWithValidation(
+                "Enter Machine Type (1-TRACTOR, 2-EXCAVATOR, 3-ROLLER, 4-CRANE, 5-MIXER)",
+                (int*)&machine->machineType, 1, 5);
+            break;
+        case 13:
+            inputIntWithValidation(
+                "Enter Breakdown Frequency (1-NEVER, 2-LESS_THAN_THREE, 3-LESS_THAN_FIVE, 4-MORE_THAN_FIVE)",
+                (int*)&machine->breakdowns, 1, 4);
+            break;
+
+        case 0:
+
+            //////////////////////////////// make minimum req /////////////////////////////
+
+            if (strlen(machine->chassisNumber) == 0) {
+                printf("Error: Chassis Number is required!\n");
+                choice = -1;
+            }
+            else if (strlen(machine->make) == 0) {
+                printf("Error: Make is required!\n");
+                choice = -1;
+            }
+            else if (machine->yearOfManufacture == 0) {
+                printf("Error: Year of Manufacture is required!\n");
+                choice = -1;
+            }
+            break;
+        default:
+            printf("Invalid choice!\n");
+        }
+    } while (choice != 0);
+
+    return nodeToEdit;
+}
+
 void clearInput(void) {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
+

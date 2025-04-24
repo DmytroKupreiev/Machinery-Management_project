@@ -16,13 +16,16 @@
     <Filter Include="Source Files\core">
       <UniqueIdentifier>{a15ae266-92a5-43f5-974d-d3512b96d92b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\include">
+      <UniqueIdentifier>{559d1a60-99eb-4429-a5ba-1d945b62a5b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\data">
+      <UniqueIdentifier>{23406005-904e-40cf-8686-b4598597e244}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="machine.c">
-      <Filter>Source Files\core</Filter>
     </ClCompile>
     <ClCompile Include="machinery_db.c">
       <Filter>Source Files\core</Filter>
@@ -36,33 +39,42 @@
     <ClCompile Include="login.c">
       <Filter>Source Files\core</Filter>
     </ClCompile>
+    <ClCompile Include="menu.c">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.c">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="constants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="machine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="machinery_db.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="view.h">
+      <Filter>Source Files\include</Filter>
     </ClInclude>
     <ClInclude Include="user_input.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\include</Filter>
     </ClInclude>
-    <ClInclude Include="view.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="machinery_db.h">
+      <Filter>Source Files\include</Filter>
     </ClInclude>
     <ClInclude Include="login.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="types.h">
+      <Filter>Source Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Source Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="menu.h">
+      <Filter>Source Files\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="fleet.txt">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\data</Filter>
     </Text>
     <Text Include="users.txt">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\data</Filter>
     </Text>
   </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stddef.h> 
 #include <string.h>
+#include <stdbool.h>
 
 #include "machinery_db.h"
 
@@ -146,7 +147,7 @@ MachineDBNode* findRowByKey(MachineDBNode* head, const char* key) {
 	return NULL;
 }
 
-MachineDBNode* initializeFromFile(const char* filePath)
+MachineDBNode* loadDatabaseFile(const char* filePath)
 {
 	FILE* db_file = fopen(filePath, "r");
 

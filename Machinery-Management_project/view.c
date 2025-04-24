@@ -1,50 +1,9 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-#include "view.h"
+#include "utils.h"
 #include "user_input.h"
-
-void displayMenu();
-
-
-void runViewApp(MachineDBNode* dataBase, User* users)
-{
-    if (!login_system(users)) {
-        printf("Access denied. Exiting...\n");
-        return;
-    }
-
-    int choice = -1;
-
-    do {
-        displayMenu();
-        printf("Enter your choice (1-9): ");
-        int countValue = scanf("%d", &choice);
-
-        if (countValue != 1) {
-            printf("Invalid input.\n");
-            clearInput();
-            continue;
-        }
-
-        switch (choice) {
-        case 1: displayAllMachines(dataBase, "ALL MACHINES"); break;
-        case 2: displayMachineByKey(dataBase); break;
-        case 3: addMachine(&dataBase); break;
-        case 4: deleteMachine(&dataBase); break;
-        case 5: updateMachine(&dataBase); break;
-        case 6: displayBreakdownStatistics(dataBase); break;
-        case 7: generateReportFile(dataBase, "report.txt"); break;
-        case 8: displaySortDB(dataBase); break;
-        case 9: system("cls"); break;
-        case 0: printf("Saving data and exiting...\n"); break;
-        default:printf("Invalid choice. Please try again.\n");
-        }
-    } while (choice != 0);
-
-    saveToFile(dataBase, DB_PATH);
-}
+#include "view.h"
 
 void displayAllMachines(MachineDBNode* head, const char* header)
 {
@@ -84,162 +43,10 @@ void displayMachineByKey(MachineDBNode* head)
     displayDBNode(foundNode);
 }
 
-void addMachine(MachineDBNode** head)
-{
-    MachineDBNode* newNode = constructMachine(head, NULL);
-    *head = addRowByKey(*head, newNode);
-}
-
-void updateMachine(MachineDBNode** head)
-{
-    char chassisNumber[MAX_STRING];
-
-    clearInput();
-    do {
-        printf("\n=== Update Database ===\n");
-        printf("Enter Chassis Number(\"-\" for exit): ");
-        fgets(chassisNumber, MAX_STRING, stdin);
-        chassisNumber[strcspn(chassisNumber, "\n")] = '\0';
-
-        if (strcmp(chassisNumber, "-") == 0) { return; }
-
-        MachineDBNode* findNode = findRowByKey(*head, chassisNumber);
-
-        if (findNode == NULL) {
-            printf("Key not found!\n");
-            continue;
-        }
-
-        constructMachine(head, findNode);
-    } while (true);
-
-}
-
-void deleteMachine(MachineDBNode** head)
-{
-    if (*head == NULL) {
-        printf("\nDatabase is empty!\n");
-        return;
-    }
-
-    char chassisNumber[MAX_STRING];
-    int currentLength = getLength(*head);
-
-    clearInput();
-    do
-    {
-        printf("\n=== Delete row ===\n");
-        printf("Enter Chassis Number(\"-\" for exit): ");
-        fgets(chassisNumber, MAX_STRING, stdin);
-        chassisNumber[strcspn(chassisNumber, "\n")] = '\0';
-
-        if (strcmp(chassisNumber, "-") == 0) { return; }
-
-        *head = deleteRowByKey(*head, chassisNumber);
-        int newLength = getLength(*head);
-
-        if (currentLength == newLength) {
-            printf("\n(-) Row not found\n");
-        }
-        else {
-            printf("\n(+) Successfully deleted\n");
-            currentLength = newLength;
-        }
-    } while (true);
-
-}
-
 void displaySortDB(MachineDBNode* head)
 {
     MachineDBNode* sorted = sortByValuation(head);
     displayAllMachines(sorted, "SORTED DATABASE");
-}
-
-MachineDBNode* constructMachine(MachineDBNode** head, MachineDBNode* node)
-{
-    MachineDBNode* nodeToEdit;
-    Machine* machine;
-
-    if (node == NULL) {
-        nodeToEdit = createRow();
-        machine = &(nodeToEdit->data);
-        memset(machine, 0, sizeof(Machine));
-        machine->currentValuation = -1;
-        machine->cost = -1;
-    }
-    else {
-        nodeToEdit = node;
-        machine = &(nodeToEdit->data);
-    }
-
-    int choice;
-    do {
-        printf("\n== Current values ==\n");
-        printf("1. Chassis Number: %s\n", machine->chassisNumber);
-        printf("2. Make: %s\n", machine->make);
-        printf("3. Model: %s\n", machine->model);
-        printf("4. Year of Manufacture: %d\n", machine->yearOfManufacture);
-        printf("5. Cost: %.2f\n", machine->cost);
-        printf("6. Current Valuation: %.2f\n", machine->currentValuation);
-        printf("7. Current Mileage: %d\n", machine->currentMileage);
-        printf("8. Next Service Mileage: %d\n", machine->nextServiceMileage);
-        printf("9. Owner Name: %s\n", machine->ownerName);
-        printf("10. Owner Email: %s\n", machine->ownerEmail);
-        printf("11. Owner Phone: %s\n", machine->ownerPhone);
-        printf("12. Machine Type: %d\n", machine->machineType);
-        printf("13. Breakdown Frequency: %d\n", machine->breakdowns);
-        printf("0. Finish and Save\n");
-        printf("Enter field to edit (0 to finish): ");
-
-        int len = scanf("%d", &choice);
-        clearInput();
-
-        switch (choice) {
-        case 1:  inputChassisNumber(*head, machine->chassisNumber); break;
-        case 2:  inputStringWithValidation("Enter Make", machine->make, 3, 50); break;
-        case 3:  inputStringWithValidation("Enter Model", machine->model, 2, 50); break;
-        case 4:  inputIntWithValidation("Enter Year of Manufacture", &machine->yearOfManufacture, 1950, 2025); break;
-        case 5:  inputFloatWithValidation("Enter Cost", &machine->cost, 0, 1000000); break;
-        case 6:  inputFloatWithValidation("Enter Current Valuation", &machine->currentValuation, 0, machine->cost); break;
-        case 7:  inputIntWithValidation("Enter Current Mileage", &machine->currentMileage, 0, 1000000); break;
-        case 8:  inputIntWithValidation("Enter Next Service Mileage", &machine->nextServiceMileage, machine->currentMileage, INT_MAX); break;
-        case 9:  inputStringWithValidation("Enter Owner Name", machine->ownerName, 2, 100); break;
-        case 10: inputEmailWithValidation(machine->ownerEmail); break;
-        case 11: inputPhoneWithValidation(machine->ownerPhone); break;
-        case 12:
-            inputIntWithValidation(
-                "Enter Machine Type (1-TRACTOR, 2-EXCAVATOR, 3-ROLLER, 4-CRANE, 5-MIXER)",
-                (int*)&machine->machineType, 1, 5);
-            break;
-        case 13:
-            inputIntWithValidation(
-                "Enter Breakdown Frequency (1-NEVER, 2-LESS_THAN_THREE, 3-LESS_THAN_FIVE, 4-MORE_THAN_FIVE)",
-                (int*)&machine->breakdowns, 1, 4);
-            break;
-
-        case 0:
-
-            //////////////////////////////// make minimum req /////////////////////////////
-
-            if (strlen(machine->chassisNumber) == 0) {
-                printf("Error: Chassis Number is required!\n");
-                choice = -1;
-            }
-            else if (strlen(machine->make) == 0) {
-                printf("Error: Make is required!\n");
-                choice = -1;
-            }
-            else if (machine->yearOfManufacture == 0) {
-                printf("Error: Year of Manufacture is required!\n");
-                choice = -1;
-            }
-            break;
-        default:
-            printf("Invalid choice!\n");
-        }
-    } while (choice != 0);
-
-    return nodeToEdit;
 }
 
 void displayMenu()
@@ -323,22 +130,3 @@ void printBreakdownStatistics(FILE* output, MachineDBNode* head) {
     fprintf(output, "+-----------------------------+-------------+\n\n");
 }
 
-void generateReportFile(MachineDBNode* head, const char* filename) {
-    FILE* file = fopen(filename, "w");
-    if (file == NULL) {
-        printf("Error opening file %s for writing.\n", filename);
-        return;
-    }
-
-    printBreakdownStatistics(file, head);
-    printTableHeader(file, "ALL MACHINES");
-
-    MachineDBNode* current = head;
-    while (current != NULL) {
-        printDBNode(file, current);
-        current = current->next;
-    }
-
-    fclose(file);
-    printf("Report successfully generated to %s\n", filename);
-}

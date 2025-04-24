@@ -1,14 +1,6 @@
 #pragma once
 
-#include <stdbool.h>
-#include "machine.h"
-
-struct MachineDBNode;
-
-typedef struct MachineDBNode {
-	Machine data;
-	struct MachineDBNode* next;
-} MachineDBNode;
+#include "types.h"
 
 MachineDBNode* createRow();
 MachineDBNode* copyNode(const MachineDBNode* source);
@@ -19,9 +11,10 @@ MachineDBNode* deleteRowByKey(MachineDBNode* head, const char* key);
 MachineDBNode* findRowByKey(MachineDBNode* head, const char* key);
 MachineDBNode* sortByValuation(MachineDBNode* head);
 
-void calculateBreakdownStats(MachineDBNode* head, float stats[5], int rowCount);
 MachineDBNode* getLast(MachineDBNode* head);
-int getLength(MachineDBNode* head);
+int			   getLength(MachineDBNode* head);
 
-MachineDBNode* initializeFromFile(const char* filePath);
-void saveToFile(MachineDBNode* head, const char* path);
+MachineDBNode* loadDatabaseFile(const char* filePath);
+void		   saveToFile(MachineDBNode* head, const char* path);
+
+void calculateBreakdownStats(MachineDBNode* head, float stats[5], int rowCount);

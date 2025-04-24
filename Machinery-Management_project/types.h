@@ -1,20 +1,27 @@
 #pragma once
 
-#include "constants.h"
+#define MAX_USERS 3
+#define MAX_LOGINS 3
+#define MAX_STRING 100
+#define CREDENTIALS_LEN 7
+
+#define LOGIN_PATH "users.txt"
+#define DB_PATH    "fleet.txt"
+
 
 typedef enum MachineType {
-    TRACTOR    = 1,
-    EXCAVATOR  = 2,
-    ROLLER     = 3,
-    CRANE      = 4,
-    MIXER      = 5
+    TRACTOR = 1,
+    EXCAVATOR = 2,
+    ROLLER = 3,
+    CRANE = 4,
+    MIXER = 5
 } MachineType;
 
 typedef enum BreakdownFreq {
-    NEVER           = 1,
+    NEVER = 1,
     LESS_THAN_THREE = 2,
-    LESS_THAN_FIVE  = 3,
-    MORE_THAN_FIVE  = 4
+    LESS_THAN_FIVE = 3,
+    MORE_THAN_FIVE = 4
 } BreakdownFreq;
 
 typedef struct Machine {
@@ -33,5 +40,15 @@ typedef struct Machine {
     BreakdownFreq   breakdowns;
 } Machine;
 
-const char* getMachineTypeString(MachineType mType);
-const char* getBreakdownFreqString(BreakdownFreq bType);
+struct MachineDBNode;
+
+typedef struct MachineDBNode {
+	Machine data;
+	struct MachineDBNode* next;
+} MachineDBNode;
+
+
+typedef struct {
+    char username[MAX_STRING];
+    char password[CREDENTIALS_LEN];
+} User;

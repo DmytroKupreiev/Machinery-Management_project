@@ -128,18 +128,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="login.c" />
-    <ClCompile Include="machine.c" />
     <ClCompile Include="machinery_db.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="menu.c" />
     <ClCompile Include="user_input.c" />
+    <ClCompile Include="utils.c" />
     <ClCompile Include="view.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="constants.h" />
     <ClInclude Include="login.h" />
-    <ClInclude Include="machine.h" />
     <ClInclude Include="machinery_db.h" />
+    <ClInclude Include="menu.h" />
+    <ClInclude Include="types.h" />
     <ClInclude Include="user_input.h" />
+    <ClInclude Include="utils.h" />
     <ClInclude Include="view.h" />
   </ItemGroup>
   <ItemGroup>
