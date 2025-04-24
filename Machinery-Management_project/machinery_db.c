@@ -15,7 +15,8 @@ MachineDBNode* createRow()
 	}
 
 	Machine* machine = &(newNode->data);
-
+	
+	// zeroing out new node data
 	memset(machine, 0, sizeof(Machine));
 	machine->currentValuation = -1;
 	machine->cost = -1;
@@ -32,6 +33,7 @@ MachineDBNode* copyNode(const MachineDBNode* source) {
 
 	MachineDBNode* newNode = createRow();
 
+	// copy node using copy inner data
 	newNode->data = source->data; 
 	newNode->next = NULL;
 
@@ -80,7 +82,7 @@ MachineDBNode* addRowByKey(MachineDBNode* head, MachineDBNode* newNode)
 	MachineDBNode* current = head;
 
 	while (current->next != NULL &&
-		   strcmp(newNode->data.chassisNumber, current->next->data.chassisNumber) > 0) 
+		   strcmp(newNode->data.chassisNumber, current->next->data.chassisNumber) > 0) //Lexicographic comparison => "13 > 123"
 	{
 		current = current->next;
 	}
@@ -256,6 +258,7 @@ int getAllWithBreakdowns(MachineDBNode* head)
 	int counter = 0;
 
 	while (current != NULL) {
+		// Check if breakdown value is within valid enum range
 		if (current->data.breakdowns >= NEVER 
 			&& current->data.breakdowns <= MORE_THAN_FIVE)
 		{
@@ -272,6 +275,7 @@ MachineDBNode* sortByValuation(MachineDBNode* head) {
 	MachineDBNode* sorted = NULL;
 	MachineDBNode* current = head;
 
+	//Sorting by recreating the list
 	while (current != NULL) {
 		MachineDBNode* next = current->next;
 		MachineDBNode* newNode = copyNode(current);

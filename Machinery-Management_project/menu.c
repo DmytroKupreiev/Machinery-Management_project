@@ -54,7 +54,7 @@ int runLogin(User* users)
 {
     char username[MAX_STRING];
     char password[CREDENTIALS_LEN];
-    int attempts = 3;
+    int attempts = 3; //maximum three attempts to enter
 
     while (attempts > 0) {
         printf("\n=== Login System ===\n");

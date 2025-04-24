@@ -112,7 +112,7 @@ void printDBNode(FILE* output, MachineDBNode* row) {
 }
 
 void printBreakdownStatistics(FILE* output, MachineDBNode* head) {
-    int totalWithBreakdowns = getAllWithBreakdowns(head);
+    int totalWithBreakdowns = getAllWithBreakdowns(head); // all nodes with breakdowns
     int total = getLength(head);
 
     if (total == 0) {
@@ -120,6 +120,7 @@ void printBreakdownStatistics(FILE* output, MachineDBNode* head) {
         return;
     }
 
+    // array for statistics of 5 elements, element 0 is not used 
     float statistic[5] = { 0, 0, 0, 0, 0 };
     calculateBreakdownStats(head, statistic, totalWithBreakdowns);
 

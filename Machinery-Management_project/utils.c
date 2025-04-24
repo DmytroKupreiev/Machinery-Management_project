@@ -2,6 +2,7 @@
 
 #include <string.h>
 
+// convert to string for output
 const char* getMachineTypeString(MachineType mType) {
     switch (mType) {
         case TRACTOR:   return "Tractor";
@@ -35,6 +36,7 @@ int validateMachine(const Machine* machine) {
     return VALIDATION_OK;
 }
 
+// Error notification
 const char* getValidationError(ValidationResult result) {
     const char* errors[] = {
         "\n(+) All fields are valid",

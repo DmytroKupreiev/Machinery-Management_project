@@ -55,18 +55,20 @@ void getHiddenPassword(char* buffer) {
     char ch;
 
     while (1) {
-        ch = _getch(); 
+        ch = _getch(); // Reads character without echo
 
         if (ch == '\r' || ch == '\n') { 
             buffer[i] = '\0';
             printf("\n");
             break;
         }
+        // Handle Backspace
         else if (ch == '\b' && i > 0) {
             i--;
             printf("\b \b");
         }
-        else if (i < CREDENTIALS_LEN - 1) {
+        // Handle regular characters
+        else if (i < CREDENTIALS_LEN - 1) { 
             buffer[i++] = ch;
             printf("*");
         }

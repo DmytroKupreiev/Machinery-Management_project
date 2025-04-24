@@ -16,11 +16,13 @@ int isValidEmail(const char* email) {
 
     int atCount = 0, dotCount = 0;
     int len = strlen(email);
-
+    
+    // check .com at the end
     if (len < 4 || strcmp(email + len - 4, ".com") != 0) {
         return 0;
     }
 
+    // check @ and a full stop
     for (int i = 0; i < len - 4; i++) {
         if (email[i] == '@') atCount++;
         if (email[i] == '.') dotCount++;
@@ -51,7 +53,11 @@ int isChassisNumberUnique(MachineDBNode* head, const char* chassisNumber) {
 void inputStringWithValidation(const char* prompt, char* dest, int minLen, int maxLen) {
     do {
         printf("%s (%d-%d characters): ", prompt, minLen, maxLen);
+
+        // Read a line from stdin with buffer overflow protection
         fgets(dest, MAX_STRING, stdin);
+
+        // at the end we put \0
         dest[strcspn(dest, "\n")] = '\0';
     } while (strlen(dest) < minLen || strlen(dest) > maxLen);
 }
@@ -65,7 +71,7 @@ void inputIntWithValidation(const char* prompt, int* dest, int minVal, int maxVa
 }
 
 void inputFloatWithValidation(const char* prompt, float* dest, float minVal, float maxVal) {
-    do {
+    do {    
         printf("%s (%.2f-%.2f): ", prompt, minVal, maxVal);
         int count = scanf("%f", dest);
         clearInput();
@@ -183,9 +189,11 @@ MachineDBNode* inputMachineData(MachineDBNode** head, MachineDBNode* node)
         case -1: printf("Exit...\n"); return NULL;
 
         case 0:
+           
             validationRes = validateMachine(machine);
             printf("%s\n", getValidationError(validationRes));
 
+            //if all checks are passed then we finish
             if (validationRes != VALIDATION_OK) {
                 choice = -2;
             }
@@ -215,6 +223,8 @@ void inputPath(char* buffer, int size, const char* prompt) {
     }
 }
 
+// Clears the standard input buffer by reading and 
+// discarding all remaining characters until a newline or EOF is encountered.
 void clearInput(void) {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
